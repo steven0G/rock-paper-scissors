@@ -22,57 +22,48 @@ function getHumanChoice() {
     else if (choice == "scissors") {
         return "scissors";
     }
-    else {
-        alert("Invalid Choice!");
-        return getHumanChoice();
-    }
+    
 }
 
 let humanScore = 0;
 let computerScore = 0;
 
 function playRound(humanChoice, computerChoice) {
+    if (humanScore == 5 || computerScore == 5) {
+        return;
+    }
     if ((humanChoice == "rock" && computerChoice == "scissors") || (humanChoice == "paper" && computerChoice == "rock") || (humanChoice == "scissors" && computerChoice == "paper")) {
+        div.textContent = `You won! ${humanChoice} beats ${computerChoice}.`;
         humanScore++;
-        alert(`You won! ${humanChoice} beats ${computerChoice}.`);
     }
     else if ((humanChoice == "rock" && computerChoice == "paper") || (humanChoice == "paper" && computerChoice == "scissors") || (humanChoice == "scissors" && computerChoice == "rock")) {
+        div.textContent = `You lose! ${computerChoice} beats ${humanChoice}.`;
         computerScore++;
-        alert(`You lose! ${computerChoice} beats ${humanChoice}.`);
     }
     else if (humanChoice == computerChoice) {
-        alert("It's a tie!");
+        div.textContent = "It's a tie!";
     }
 }
 
 
+const buttons = document.querySelectorAll("button");
+const div = document.querySelector("#result");
+const displayHumanScore = document.querySelector("#humanScore");
+const displayCompScore = document.querySelector("#computerScore");
 
-function playGame() {
-    rounds = 0;
-    while (rounds < 5) {
-        const humanSelection = getHumanChoice();
+buttons.forEach((button) => {
+    button.addEventListener("click", () => {
         const computerSelection = getComputerChoice();
-        playRound(humanSelection, computerSelection);
-        if (humanScore == 3) {
-            alert(`Congrats! you won. You won ${humanScore} rounds while the computer only won ${computerScore} rounds.`);
-            return null;
-        }
-        else if (computerScore == 3) {
-            alert(`Too bad! you lose. You  only won ${humanScore} rounds while the computer won ${computerScore} rounds.`);
-            return null;
-        }
-        rounds++
+        playRound(button.id, computerSelection);
+        displayHumanScore.textContent = `Your Score: ${humanScore}`;
+        displayCompScore.textContent = `Computer Score: ${computerScore}`;
         
-    }
-    if (humanScore > computerScore) {
-        alert(`Congrats! you won. You won ${humanScore} rounds while the computer only won ${computerScore} rounds.`);
-    }
-    else if (computerScore < humanScore) {
-        alert(`Too bad! you lose. You  only won ${humanScore} rounds while the computer won ${computerScore} rounds.`);
-    }
-    else if (humanScore == computerScore) {
-        alert(`It's a tie! you won ${humanScore} rounds while the computer also won ${computerScore} rounds. `);
-    }
+        if (humanScore == 5) {
+            div.textContent = "Game Over! Player won!";
+        }
+        else if (computerScore == 5) {
+            div.textContent = "Game Over! Computer won!";
+        }
 
-}
-playGame();
+    });
+});
